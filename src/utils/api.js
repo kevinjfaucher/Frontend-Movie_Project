@@ -85,4 +85,29 @@ export async function listTheaters(signal) {
 
 /**
  * Retrieves all existing movies and populates the `reviews` property
- * @returns {Promise<[mov
+ * @returns {Promise<[movie]>}
+ *  a promise that resolves to a possibly empty array of movies saved in the database.
+ */
+export async function readMovie(movieId, signal) {
+  const url = `${API_BASE_URL}/movies/${movieId}`;
+  const addReviews = populateReviews(signal);
+  const addTheaters = populateTheaters(signal);
+  return await fetchJson(url, { headers, signal }, [])
+    .then(addReviews)
+    .then(addTheaters);
+}
+
+export async function deleteReview(reviewId) {
+  const url = `${API_BASE_URL}/reviews/${reviewId}`;
+  return await fetchJson(url, { method: "DELETE", headers }, {});
+}
+
+export async function updateReview(reviewId, data) {
+  const url = `${API_BASE_URL}/reviews/${reviewId}`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data }),
+  };
+  return await fetchJson(url, options, {});
+}
