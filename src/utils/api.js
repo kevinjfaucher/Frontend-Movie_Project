@@ -1,5 +1,4 @@
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 /**
  * Defines the default headers for these functions to work with `json-server`
@@ -13,7 +12,7 @@ headers.append("Content-Type", "application/json");
  * This function is NOT exported because it is not needed outside of this file.
  *
  * @param url
- *  the url for the requst.
+ *  the url for the request.
  * @param options
  *  any options for fetch
  * @param onCancel
@@ -67,7 +66,7 @@ function populateTheaters(signal) {
  *  a promise that resolves to a possibly empty array of movies saved in the database.
  */
 export async function listMovies(signal) {
-  const url = new URL(`${API_BASE_URL}/movies?is_showing=true`);
+  const url = `${API_BASE_URL}/movies?is_showing=true`;
   const addReviews = populateReviews(signal);
   return await fetchJson(url, { headers, signal }, []).then((movies) =>
     Promise.all(movies.map(addReviews))
@@ -80,35 +79,10 @@ export async function listMovies(signal) {
  *  a promise that resolves to a possibly empty array of theaters saved in the database.
  */
 export async function listTheaters(signal) {
-  const url = new URL(`${API_BASE_URL}/theaters`);
+  const url = `${API_BASE_URL}/theaters`;
   return await fetchJson(url, { headers, signal }, []);
 }
 
 /**
  * Retrieves all existing movies and populates the `reviews` property
- * @returns {Promise<[movie]>}
- *  a promise that resolves to a possibly empty array of movies saved in the database.
- */
-export async function readMovie(movieId, signal) {
-  const url = new URL(`${API_BASE_URL}/movies/${movieId}`);
-  const addReviews = populateReviews(signal);
-  const addTheaters = populateTheaters(signal);
-  return await fetchJson(url, { headers, signal }, [])
-    .then(addReviews)
-    .then(addTheaters);
-}
-
-export async function deleteReview(reviewId) {
-  const url = `${API_BASE_URL}/reviews/${reviewId}`;
-  return await fetchJson(url, { method: "DELETE", headers }, {});
-}
-
-export async function updateReview(reviewId, data) {
-  const url = `${API_BASE_URL}/reviews/${reviewId}`;
-  const options = {
-    method: "PUT",
-    headers,
-    body: JSON.stringify({ data }),
-  };
-  return await fetchJson(url, options, {});
-}
+ * @returns {Promise<[mov
